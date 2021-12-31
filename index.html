@@ -1,0 +1,84 @@
+<html>
+<head>
+    <!-- Alpine Plugins -->
+    <script defer src="https://unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Alpine Core -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div x-data="app()" class="container">
+      <div >
+        <h1 class="">To-Do List: </h1>
+        <template x-for="task in tasks">
+          <div class="pure-g todoItem">
+            <div class="pure-u-3-4">
+              <span x-text="task" x-ref="task" class=""></span>
+            </div>
+            <div class="pure-u-1-4">
+              <button @click="deleteTask($el.parentElement.parentElement.getElementsByTagName('span').item(0).innerText)">X</button>
+            </div>
+          </div>
+        </template>
+        <div class="pure-g pure-form newItem">
+          <div class="pure-u-3-4">
+            <input type="text" x-model="newTask"
+            @keyup.enter="saveTask" class="pure-input-3-4">
+          </div>
+          <div class="pure-u-1-4">
+            <button @click="saveTask" 
+              class="pure-button pure-button-primary">save</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+</body>
+<script>
+  document.addEventListener('alpine:init', function () {
+    Alpine.data('app', function () {
+      return {
+        newTask: '',
+        tasks: this.$persist([]),
+        todoItems: this.$persist([]),
+        saveTask() {
+          this.tasks.push(this.newTask)
+          this.newTask = ''
+        },
+        deleteTask(deletedTask) {
+          this.tasks = this.tasks.filter(task => task != deletedTask)
+        }
+      }
+    })
+  })
+</script>
+<style>
+  * { box-sizing: border-box }
+  html, body {
+    width: 100%;
+    height: 100%;
+  }
+  body {
+    padding: 10px;
+    background: #282E3A;
+    color: lightsteelblue;
+  }
+  .container {
+    margin: 0 auto;
+    width: 640px;
+  }
+  .todoItem {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  .newItem {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+</style>
+</html>
